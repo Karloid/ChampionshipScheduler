@@ -1,0 +1,91 @@
+package com.krld;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.krld.Util.println;
+
+public class Championship {
+
+    public List<Team> teams = new ArrayList<>();
+    public List<Match> matches = new ArrayList<>();
+    public List<Tour> tours = new ArrayList<>();
+
+    public void addTeams(int count) {
+
+        String abc = "qwertyuiopasdfghjklzxcvbnm";
+        for (int i = 0; i < count; i++) {
+            addTeam(new Team(abc.charAt(i) + ""));
+        }
+    }
+
+    public void printAllTeams() {
+        String str = "";
+        for (Team team : teams) {
+            str += team.name + ", ";
+        }
+        println(str);
+    }
+
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
+
+    public void createAllMatches() {
+        for (Team a : teams) {
+            for (Team b : teams) {
+                if (a == b) {
+                    continue;
+                }
+                boolean isNew = true;
+
+                for (Match match : matches) {
+                    if (match.contains(a, b)) {
+                        isNew = false;
+                        break;
+                    }
+                }
+
+                if (isNew) {
+                    matches.add(new Match(a, b));
+                }
+            }
+        }
+    }
+
+    public void printAllMatches() {
+        String s = "";
+
+        for (Match match : matches) {
+            s += match + ", ";
+        }
+        println(s + " qty: " + matches.size());
+    }
+
+    public void createTours() {
+        tours = new ArrayList<>();
+
+        int tourCount = teams.size() - 1;
+
+        for (int i = 0; i < tourCount; i++) {
+            tours.add(new Tour());
+        }
+    }
+
+    public boolean isValid() {
+        for (Tour tour : tours) {
+            if (!tour.isValid()) {
+                 return false;
+            }
+        }
+        return true;
+    }
+
+    public void printTours() {
+        for (Tour tour : tours) {
+            tour.printMatches();
+        }
+
+    }
+}
