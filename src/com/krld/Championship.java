@@ -74,9 +74,10 @@ public class Championship {
     }
 
     public boolean isValid() {
+        int matchesInTour = teams.size() / 2;
         for (Tour tour : tours) {
-            if (!tour.isValid()) {
-                 return false;
+            if (!tour.isValid() || tour.matches.size() < matchesInTour) {
+                return false;
             }
         }
         return true;
@@ -86,6 +87,5 @@ public class Championship {
         for (Tour tour : tours) {
             tour.printMatches();
         }
-
     }
 }

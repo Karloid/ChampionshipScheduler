@@ -6,10 +6,11 @@ public class Scheduler {
     public void run() {
         println("start");
 
-        check(new Random2Algh());
-        check(new Random2Algh());
-        check(new Random2Algh());
-        check(new RandomAlgh());
+       // check(new Random2Algh());
+       // check(new Random2Algh());
+       // check(new Random2Algh());
+       // check(new RandomAlgh());
+        check(new Random3Algh());
     }
 
     private void check(ScheduleAlgorithm algorithm) {
@@ -28,7 +29,7 @@ public class Scheduler {
     private Championship initChampionship() {
         Championship c = new Championship();
 
-        c.addTeams(6);
+        c.addTeams(12);
 
         c.printAllTeams();
 

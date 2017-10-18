@@ -23,4 +23,14 @@ public class Tour {
         }
         Util.println("");
     }
+
+    public boolean isValid(Match fm) {
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < matches.size(); i++) {
+                if (matches.get(i).contains(fm)) {
+                    return false;
+            }
+        }
+        return true;
+    }
 }
