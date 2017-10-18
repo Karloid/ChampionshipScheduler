@@ -12,6 +12,15 @@ public class Championship {
     public List<Match> matches = new ArrayList<>();
     public List<Tour> tours = new ArrayList<>();
 
+    public Championship() {
+    }
+
+    public Championship(Championship c) {
+        teams = new ArrayList<>(c.teams);
+        matches = new ArrayList<>(c.matches);
+        tours = new ArrayList<>(c.tours); // dirty
+    }
+
     public void addTeams(int count) {
 
         String abc = "qwertyuiopasdfghjklzxcvbnm";
@@ -86,6 +95,12 @@ public class Championship {
     public void printTours() {
         for (Tour tour : tours) {
             tour.printMatches();
+        }
+    }
+
+    public void sortTours() {
+        for (Tour tour : tours) {
+            tour.sort();
         }
     }
 }

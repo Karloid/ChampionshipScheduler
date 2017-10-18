@@ -2,23 +2,58 @@ package com.krld;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Random3Algh implements ScheduleAlgorithm {
 
     private int iter;
+    private volatile Championship solved;
+    private ExecutorService executorService;
+    private final int nThreads;
+
+    public Random3Algh(int nThreads) {
+
+        this.nThreads = nThreads;
+    }
 
     @Override
-    public Championship schedule(Championship c) {
-        
+    public Championship schedule(final Championship c) {
+        executorService = Executors.newFixedThreadPool(nThreads);
+        for (int i = 0; i < nThreads; i++) {
+            try {
+
+                executorService.submit(() -> solve(new Championship(c)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+
+        try {
+            executorService.awaitTermination(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        return solved == null ? c : solved;
+    }
+
+    private void solve(Championship c) {
         int matchesInTour = c.teams.size() / 2;
         int tours = c.teams.size() - 1;
+
+        ArrayList<Match> freeMatches;
+        List<Match> validMatches;
 
         iter = 0;
         while (true) {
             iter++;
             c.createTours();
 
-            ArrayList<Match> freeMatches = new ArrayList<>(c.matches);
+            freeMatches = new ArrayList<>(c.matches);
 
             for (int i = 0; i < tours; i++) {
                 c.tours.get(i).matches.add(freeMatches.get(i));
@@ -31,7 +66,10 @@ public class Random3Algh implements ScheduleAlgorithm {
 
 
             for (int i = 0; !freeMatches.isEmpty(); i++) {
-                List<Match> validMatches = new ArrayList<>(freeMatches.size());
+                if (solved != null) {
+                    break;
+                }
+                validMatches = new ArrayList<>(freeMatches.size());
 
                 Tour tour = c.tours.get(i % tours);
 
@@ -55,10 +93,15 @@ public class Random3Algh implements ScheduleAlgorithm {
             }
 
             if (c.isValid()) {
+                solved = c;
+                executorService.shutdownNow();
+                break;
+            }
+
+            if (solved != null) {
                 break;
             }
         }
-        return c;
     }
 
     @Override

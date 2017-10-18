@@ -33,4 +33,9 @@ public class Tour {
         }
         return true;
     }
+
+    public void sort() {
+        //noinspection ComparatorCombinators
+        matches.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
+    }
 }
