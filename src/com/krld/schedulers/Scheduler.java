@@ -1,6 +1,8 @@
-package com.krld;
+package com.krld.schedulers;
 
-public interface ScheduleAlgorithm {
+import com.krld.models.Championship;
+
+public interface Scheduler {
     Championship schedule(Championship championship);
 
     int getIterations();

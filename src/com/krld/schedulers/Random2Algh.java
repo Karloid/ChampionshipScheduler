@@ -1,8 +1,11 @@
-package com.krld;
+package com.krld.schedulers;
+
+import com.krld.models.Championship;
+import com.krld.models.Match;
 
 import java.util.List;
 
-public class Random2Algh implements ScheduleAlgorithm {
+public class Random2Algh implements Scheduler {
 
     private int iterations;
 

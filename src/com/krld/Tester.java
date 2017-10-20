@@ -1,10 +1,18 @@
 package com.krld;
 
+import com.krld.models.Championship;
+import com.krld.schedulers.PathFindingScheduler;
+import com.krld.schedulers.Random3Algh;
+import com.krld.schedulers.Scheduler;
+
 import java.util.*;
 
 import static com.krld.Util.println;
 
-public class Scheduler {
+public class Tester {
+
+    public static final int TEAM_COUNT = 4;
+
     public void run() {
         println("start");
 
@@ -13,8 +21,8 @@ public class Scheduler {
         // check(new Random2Algh());
         // check(new RandomAlgh());
 
-
-        checkThreadsForRandom3();
+        check(new PathFindingScheduler());
+        //checkThreadsForRandom3();
     }
 
     private void checkThreadsForRandom3() {
@@ -37,19 +45,22 @@ public class Scheduler {
         println(entries.toString());
     }
 
-    private ResultInfo check(ScheduleAlgorithm algorithm) {
+    private ResultInfo check(Scheduler scheduler) {
         Championship initialChamp = initChampionship();
-        println("\n\nAlgorithm name: " + algorithm.getName() + " Start checking, " +
+        println("\n\nAlgorithm name: " + scheduler.getName() + " Start checking, " +
                 "teams count: " + initialChamp.matches.size());
 
         long start = System.currentTimeMillis();
-        Championship c = algorithm.schedule(initialChamp);
+        Championship c = scheduler.schedule(initialChamp);
+        if (c == null) {
+            c = initialChamp;
+        }
         c.sortTours();
         c.printTours();
         long spentTime = System.currentTimeMillis() - start;
-        int iterations = algorithm.getIterations();
+        int iterations = scheduler.getIterations();
 
-        println("Algorithm name: " + algorithm.getName() + "\nResult is valid " + (c.isValid() ? "YES" : "NO") +
+        println("Algorithm name: " + scheduler.getName() + "\nResult is valid " + (c.isValid() ? "YES" : "NO") +
                 "\nTime spent: " + spentTime + " iterations: " + iterations);
 
         return new ResultInfo(spentTime, iterations);
@@ -58,7 +69,7 @@ public class Scheduler {
     private Championship initChampionship() {
         Championship c = new Championship();
 
-        c.addTeams(10);
+        c.addTeams(TEAM_COUNT);
 
         c.printAllTeams();
 

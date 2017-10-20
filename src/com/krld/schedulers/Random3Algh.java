@@ -1,4 +1,9 @@
-package com.krld;
+package com.krld.schedulers;
+
+import com.krld.models.Championship;
+import com.krld.models.Match;
+import com.krld.models.Tour;
+import com.krld.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class Random3Algh implements ScheduleAlgorithm {
+public class Random3Algh implements Scheduler {
 
     private int iter;
     private volatile Championship solved;

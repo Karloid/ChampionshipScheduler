@@ -1,4 +1,4 @@
-package com.krld;
+package com.krld.models;
 
 
 import java.util.ArrayList;

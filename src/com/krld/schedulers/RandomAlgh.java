@@ -1,4 +1,7 @@
-package com.krld;
+package com.krld.schedulers;
+
+import com.krld.models.Championship;
+import com.krld.models.Match;
 
 import java.util.Collections;
 import java.util.List;
@@ -6,7 +9,7 @@ import java.util.List;
 import static com.krld.Util.print;
 import static com.krld.Util.println;
 
-public class RandomAlgh implements ScheduleAlgorithm {
+public class RandomAlgh implements Scheduler {
 
     private int iterations;
 

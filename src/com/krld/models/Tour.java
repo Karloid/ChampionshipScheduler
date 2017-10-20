@@ -1,4 +1,6 @@
-package com.krld;
+package com.krld.models;
+
+import com.krld.Util;
 
 import java.util.ArrayList;
 import java.util.List;

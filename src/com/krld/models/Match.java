@@ -1,4 +1,4 @@
-package com.krld;
+package com.krld.models;
 
 public class Match {
     public Team t1;

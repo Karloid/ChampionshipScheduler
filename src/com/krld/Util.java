@@ -3,11 +3,11 @@ package com.krld;
 import java.util.List;
 
 public class Util {
-    static void println(String msg) {
+    public static void println(String msg) {
         System.out.println(msg);
     }
 
-    static void print(String s) {
+    public static void print(String s) {
         System.out.print(s);
     }
 
