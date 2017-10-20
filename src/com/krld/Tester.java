@@ -1,6 +1,7 @@
 package com.krld;
 
 import com.krld.models.Championship;
+import com.krld.schedulers.PathFindingScheduler;
 import com.krld.schedulers.Random3Algh;
 import com.krld.schedulers.Scheduler;
 
@@ -13,7 +14,7 @@ import static com.krld.Util.println;
 
 public class Tester {
 
-    public static final int TEAM_COUNT = 10;
+    public static final int TEAM_COUNT = 8;
 
     public void run() {
         println("start");
@@ -23,9 +24,9 @@ public class Tester {
         // check(new Random2Algh());
         // check(new RandomAlgh());
 
-        //check(new PathFindingScheduler());
+        check(new PathFindingScheduler());
         //checkThreadsForRandom3();
-        ResultInfo res = check(new Random3Algh(8));
+       // ResultInfo res = check(new Random3Algh(8));
     }
 
     private void checkThreadsForRandom3() {
@@ -55,12 +56,13 @@ public class Tester {
 
         long start = System.currentTimeMillis();
         Championship c = scheduler.schedule(initialChamp);
+        long spentTime = System.currentTimeMillis() - start;
         if (c == null) {
             c = initialChamp;
         }
         c.sortTours();
         c.printTours();
-        long spentTime = System.currentTimeMillis() - start;
+
         int iterations = scheduler.getIterations();
 
         println("Algorithm name: " + scheduler.getName() + "\nResult is valid " + (c.isValid() ? "YES" : "NO") +

@@ -7,6 +7,9 @@ import com.krld.models.Tour;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PathFindingScheduler implements Scheduler {
     private Step currentStep;
@@ -19,6 +22,10 @@ public class PathFindingScheduler implements Scheduler {
 
     @Override
     public Championship schedule(Championship c) {
+
+        ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor();
+        threadPool.scheduleAtFixedRate(new StatsRunnable(), 1000, 1000, TimeUnit.MILLISECONDS);
+
         this.c = c;
         allMatches = new ArrayList<>(c.matches);
         currentStep = new Step(c.tours.get(0), c.matches.get(0), null);
@@ -30,10 +37,13 @@ public class PathFindingScheduler implements Scheduler {
                 return c;
             }
 
+
             Step nextStep = getNextStep();
 
-
+            Step savedCurrentState = this.currentStep;
             setCurrentStep(nextStep);
+
+            savedCurrentState.clearIfEmpty();
         }
 
         return c;
@@ -59,34 +69,34 @@ public class PathFindingScheduler implements Scheduler {
     }
 
     private Step getNextStep() {
-        Step nextStep = null;
+        Step result = null;
 
         {
             for (int i = 0; i < openSteps.size(); i++) {
                 Step openStep = openSteps.get(i);
-                if (nextStep == null) {
-                    nextStep = openStep;
+                if (result == null) {
+                    result = openStep;
                     continue;
                 }
 
-                if (nextStep.deep < openStep.deep
-                        || (nextStep.deep == openStep.deep
+                if (result.deep < openStep.deep
+                        || (result.deep == openStep.deep
                         && currentStep.children.contains(openStep))) {
-                    nextStep = openStep;
+                    result = openStep;
                     continue;
                 }
             }
         }
-        return nextStep;
+        return result;
     }
 
     private void undo(Step step) {
         step.tour.matches.remove(step.match);
-       // println("Undo: " + step.toString());
+        // println("Undo: " + step.toString());
     }
 
     private void addToClosed(Step step) {
-       // println("Add to closed deep: " + step.deep);
+        // println("Add to closed deep: " + step.deep);
         apply(step);
 
         if (step.deep > maxDeep) {
@@ -161,6 +171,7 @@ public class PathFindingScheduler implements Scheduler {
     }
 
     public static class Step {
+        public static int stepsCreated;
         public int deep;
         public Tour tour;
         public Match match;
@@ -168,6 +179,7 @@ public class PathFindingScheduler implements Scheduler {
         public List<Step> children = new ArrayList<>(0);
 
         public Step(Tour tour, Match match, Step parent) {
+            stepsCreated++;
             this.tour = tour;
             this.match = match;
             this.parent = parent;
@@ -213,6 +225,33 @@ public class PathFindingScheduler implements Scheduler {
             sb.append("childrenCount=").append(children.size());
             sb.append('}');
             return sb.toString();
+        }
+
+        public void checkAlive() {
+
+        }
+
+        public void clearIfEmpty() {
+            if (children.isEmpty() && parent != null) {
+                parent.children.remove(this);
+                parent.clearIfEmpty(); //TODO rework with loop
+            }
+        }
+    }
+
+    private static class StatsRunnable implements Runnable {
+
+        private int stepsCreated;
+
+        @Override
+        public void run() {
+            //stats
+            int stepsCreated = Step.stepsCreated;
+
+            int perSecond = stepsCreated - this.stepsCreated;
+
+            this.stepsCreated = stepsCreated;
+            Util.println("Steps created: " + stepsCreated + " per second: " + perSecond);
         }
     }
 }
