@@ -1,9 +1,9 @@
-package com.krld;
+package com.krld.schedulers;
 
+import com.krld.Util;
 import com.krld.models.Championship;
 import com.krld.models.Match;
 import com.krld.models.Team;
-import com.krld.schedulers.Scheduler;
 
 import java.util.Collections;
 import java.util.List;
