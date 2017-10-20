@@ -34,6 +34,7 @@ public class PathFindingScheduler implements Scheduler {
             addToClosed(currentStep);
 
             if (solved) {
+                threadPool.shutdownNow();
                 return c;
             }
 
@@ -45,7 +46,8 @@ public class PathFindingScheduler implements Scheduler {
 
             savedCurrentState.clearIfEmpty();
         }
-
+        threadPool.shutdownNow();
+        
         return c;
     }
 
@@ -73,16 +75,16 @@ public class PathFindingScheduler implements Scheduler {
 
         {
             for (int i = 0; i < openSteps.size(); i++) {
-                Step openStep = openSteps.get(i);
+                Step step = openSteps.get(i);
                 if (result == null) {
-                    result = openStep;
+                    result = step;
                     continue;
                 }
 
-                if (result.deep < openStep.deep
-                        || (result.deep == openStep.deep
-                        && currentStep.children.contains(openStep))) {
-                    result = openStep;
+                if (step.deep >= result.deep && step.heuristic <= result.heuristic
+                        /*|| (result.deep == step.deep
+                        && currentStep.children.contains(step))*/) {
+                    result = step;
                     continue;
                 }
             }
@@ -101,7 +103,8 @@ public class PathFindingScheduler implements Scheduler {
 
         if (step.deep > maxDeep) {
             maxDeep = step.deep;
-            Util.print("Deepest step" + step.toString());
+            Util.println("total created steps: " + Step.stepsCreated);
+            Util.print("Deepest step - " + step.toString());
             Util.println(step.getAllMatches().toString());
         }
         openSteps.remove(step);
@@ -177,6 +180,7 @@ public class PathFindingScheduler implements Scheduler {
         public Match match;
         public Step parent;
         public List<Step> children = new ArrayList<>(0);
+        public int heuristic;
 
         public Step(Tour tour, Match match, Step parent) {
             stepsCreated++;
@@ -188,6 +192,22 @@ public class PathFindingScheduler implements Scheduler {
                 deep = 0;
             } else {
                 deep = parent.deep + 1;
+            }
+
+            // calcHeuristic();
+        }
+
+        private void calcHeuristic() {
+            heuristic = 0;
+
+            List<Match> allMatches = getAllMatches();
+
+            for (Match m : allMatches) {
+                if (m == match) {
+                    continue;
+                }
+                int i = m.countTeams(match);
+                heuristic += i;
             }
         }
 
@@ -239,7 +259,7 @@ public class PathFindingScheduler implements Scheduler {
         }
     }
 
-    private static class StatsRunnable implements Runnable {
+    private class StatsRunnable implements Runnable {
 
         private int stepsCreated;
 
@@ -251,7 +271,9 @@ public class PathFindingScheduler implements Scheduler {
             int perSecond = stepsCreated - this.stepsCreated;
 
             this.stepsCreated = stepsCreated;
-            Util.println("Steps created: " + stepsCreated + " per second: " + perSecond);
+
+            Step step = PathFindingScheduler.this.currentStep;
+            Util.println("Steps created: " + stepsCreated + " per second: " + perSecond + " current step: " + step + " m: " + step.getAllMatches());
         }
     }
 }

@@ -21,4 +21,17 @@ public class Match {
     public boolean contains(Match match) {
         return t1 == match.t1 || t2 == match.t1 || t1 == match.t2 || t2 == match.t2;
     }
+
+    public int countTeams(Match match) {
+        int i = 0;
+        if (match.t1 == t1 || match.t1 == t2) {
+            i++;
+        }
+
+        if (match.t2 == t1 || match.t2 == t2) {
+            i++;
+        }
+
+        return i;
+    }
 }

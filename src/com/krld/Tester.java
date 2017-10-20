@@ -14,7 +14,7 @@ import static com.krld.Util.println;
 
 public class Tester {
 
-    public static final int TEAM_COUNT = 8;
+    public static final int TEAM_COUNT = 6;
 
     public void run() {
         println("start");
