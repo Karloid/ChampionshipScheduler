@@ -1,17 +1,19 @@
 package com.krld;
 
 import com.krld.models.Championship;
-import com.krld.schedulers.PathFindingScheduler;
 import com.krld.schedulers.Random3Algh;
 import com.krld.schedulers.Scheduler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.krld.Util.println;
 
 public class Tester {
 
-    public static final int TEAM_COUNT = 4;
+    public static final int TEAM_COUNT = 10;
 
     public void run() {
         println("start");
@@ -21,8 +23,9 @@ public class Tester {
         // check(new Random2Algh());
         // check(new RandomAlgh());
 
-        check(new PathFindingScheduler());
+        //check(new PathFindingScheduler());
         //checkThreadsForRandom3();
+        ResultInfo res = check(new Random3Algh(8));
     }
 
     private void checkThreadsForRandom3() {
