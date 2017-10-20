@@ -1,7 +1,6 @@
 package com.krld;
 
 import com.krld.models.Championship;
-import com.krld.schedulers.PathFindingScheduler;
 import com.krld.schedulers.Random3Algh;
 import com.krld.schedulers.Scheduler;
 
@@ -14,7 +13,7 @@ import static com.krld.Util.println;
 
 public class Tester {
 
-    public static final int TEAM_COUNT = 6;
+    public static final int TEAM_COUNT = 100;
 
     public void run() {
         println("start");
@@ -24,7 +23,8 @@ public class Tester {
         // check(new Random2Algh());
         // check(new RandomAlgh());
 
-        check(new PathFindingScheduler());
+       // check(new PathFindingScheduler());
+        check(new RoundRobinScheduler());
         //checkThreadsForRandom3();
        // ResultInfo res = check(new Random3Algh(8));
     }

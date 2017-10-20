@@ -25,7 +25,13 @@ public class Championship {
 
         String abc = "qwertyuiopasdfghjklzxcvbnm";
         for (int i = 0; i < count; i++) {
-            addTeam(new Team(abc.charAt(i) + ""));
+            String name;
+            if (i > abc.length() - 1) {
+                name = "T" + i;
+            } else {
+                name = abc.charAt(i) + "";
+            }
+            addTeam(new Team(name));
         }
     }
 
@@ -86,6 +92,18 @@ public class Championship {
         int matchesInTour = teams.size() / 2;
         for (Tour tour : tours) {
             if (!tour.isValid() || tour.matches.size() < matchesInTour) {
+                return false;
+            }
+        }
+
+        for (Match match : matches) {
+            boolean found = false;
+            for (Tour tour : tours) {
+                if (tour.matches.contains(match)) {
+                    found = true;
+                }
+            }
+            if (!found) {
                 return false;
             }
         }
